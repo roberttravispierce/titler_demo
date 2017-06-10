@@ -1,24 +1,5 @@
-# README
+# Titler Demo Application
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+This application is for the development of the Titler ruby gem, which will make titling your app pages simple but flexible.
 
-Things you may want to cover:
-
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Created following the basic [Heroku Instructions - Getting Started with Rails 5.x on Heroku]("https://devcenter.heroku.com/articles/getting-started-with-rails5"), using Rails 5.0.3 and Ruby 2.3.1
