@@ -1,5 +1,6 @@
 en:
   hello: "Hello world"
+  time_preface: "The time is now: "
 
   page_title:
     base: Titler
@@ -11,6 +12,7 @@ en:
     view_content: Set by View Content_For
 
   description:
+    preface: "Title of this page: "
     index: This page uses the default/fallback titling mechanism
     variable: This page uses the instance variable titling mechanism
     view_content: This page use the view content_for titling mechanism
