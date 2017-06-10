@@ -58,26 +58,26 @@ RSpec.describe TitlerHelper, type: :helper do
     end
   end
 
-  describe '#env_prefix' do
-    it 'should (1) return a one letter environment prefix unless in production' do
-      expect(helper.env_prefix).to match '(T) '
-    end
-
-    it 'should (2) return an empty string if production env' do
-      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
-      expect(helper.env_prefix).to match ''
-    end
-
-    it 'should (3) return a development prefix in development' do
-      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('development'))
-      expect(helper.env_prefix).to match '(D) '
-    end
-
-    it 'should (4) return a staging prefix in staging' do
-      allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('staging'))
-      expect(helper.env_prefix).to match '(S) '
-    end
-  end
+  # describe '#env_prefix' do
+  #   it 'should (1) return a one letter environment prefix unless in production' do
+  #     expect(helper.env_prefix).to match '(T) '
+  #   end
+  #
+  #   it 'should (2) return an empty string if production env' do
+  #     allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('production'))
+  #     expect(helper.env_prefix).to match ''
+  #   end
+  #
+  #   it 'should (3) return a development prefix in development' do
+  #     allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('development'))
+  #     expect(helper.env_prefix).to match '(D) '
+  #   end
+  #
+  #   it 'should (4) return a staging prefix in staging' do
+  #     allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('staging'))
+  #     expect(helper.env_prefix).to match '(S) '
+  #   end
+  # end
 
   describe '#env_badge' do
     it '(1) returns an env label string inside a :span element with a default :li wrapper unless in production' do
@@ -108,37 +108,40 @@ RSpec.describe TitlerHelper, type: :helper do
     end
   end
 
-  describe '#available_page_title' do
-    it '(1) returns the the translation title if no other titles are set' do
-      I18n.backend = I18n::Backend::Simple.new
-      allow(I18n).to receive(:t).with('page_title.default').and_return("Test Title from i18n")
-      @page_title = nil
-      expect(helper.available_page_title).to eq(t('page_title.default'))
-    end
-
-    it '(2) returns the the @page_title if it exists and no content_for exists' do
-      I18n.backend = I18n::Backend::Simple.new
-      allow(I18n).to receive(:t).with('page_title.default').and_return("Test Title from i18n")
-      translation_title = t('page_title.default')
-      @page_title = "Test Title from @page_title"
-      expect(helper.available_page_title).to eq(@page_title)
-    end
-
-    it '(3) returns the the content_for title if it exists' do
-      I18n.backend = I18n::Backend::Simple.new
-      allow(I18n).to receive(:t).with('page_title.default').and_return("Test Title from i18n")
-      translation_title = t('page_title.default')
-      @page_title = "Test Title from @page_title"
-      helper.content_for(:page_title, 'Test Title from content_for')
-      expect(helper.available_page_title).to eq('Test Title from content_for')
-    end
-
-    it '(4) returns a blank string if no titles are found' do
-      # I18n.backend = I18n::Backend::SimpleStub.new # Sets I18n.exists? to false
-      #TODO: Implement shared context per SO Answer to my question: https://stackoverflow.com/questions/44223315/rspec-test-for-when-an-i18n-key-is-missing
-      allow(I18n).to receive(:exists?).with('page_title.default').and_return(false)
-      @page_title = nil
-      expect(helper.available_page_title).to eq('')
-    end
-  end
+  # describe '#available_page_title' do
+  #   it '(1) returns the the translation title if no other titles are set' do
+  #     I18n.backend = I18n::Backend::Simple.new
+  #     allow(I18n).to receive(:t).with('page_title.default').and_return("Test Title from i18n")
+  #     @page_title = nil
+  #
+  #     expect(helper.my_public_method)).to eq("private method")
+  #     expect(helper.available_page_title).to eq(t('page_title.default'))
+  #
+  #   end
+  #
+  #   it '(2) returns the the @page_title if it exists and no content_for exists' do
+  #     I18n.backend = I18n::Backend::Simple.new
+  #     allow(I18n).to receive(:t).with('page_title.default').and_return("Test Title from i18n")
+  #     translation_title = t('page_title.default')
+  #     @page_title = "Test Title from @page_title"
+  #     expect(helper.available_page_title).to eq(@page_title)
+  #   end
+  #
+  #   it '(3) returns the the content_for title if it exists' do
+  #     I18n.backend = I18n::Backend::Simple.new
+  #     allow(I18n).to receive(:t).with('page_title.default').and_return("Test Title from i18n")
+  #     translation_title = t('page_title.default')
+  #     @page_title = "Test Title from @page_title"
+  #     helper.content_for(:page_title, 'Test Title from content_for')
+  #     expect(helper.available_page_title).to eq('Test Title from content_for')
+  #   end
+  #
+  #   it '(4) returns a blank string if no titles are found' do
+  #     # I18n.backend = I18n::Backend::SimpleStub.new # Sets I18n.exists? to false
+  #     #TODO: Implement shared context per SO Answer to my question: https://stackoverflow.com/questions/44223315/rspec-test-for-when-an-i18n-key-is-missing
+  #     allow(I18n).to receive(:exists?).with('page_title.default').and_return(false)
+  #     @page_title = nil
+  #     expect(helper.available_page_title).to eq('')
+  #   end
+  # end
 end
