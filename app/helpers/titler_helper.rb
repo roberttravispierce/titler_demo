@@ -9,14 +9,6 @@ module TitlerHelper
     html << (available_title.blank? ? app_name : app_name.prepend(delimiter))
   end
 
-  def env_badge(outer = :li)
-    unless Rails.env.production?
-      content_tag(outer) do
-       content_tag(:span, "#{Rails.env.titleize}", class: "label label--env-#{Rails.env}")
-      end
-    end
-  end
-
   private
 
   def env_prefix
