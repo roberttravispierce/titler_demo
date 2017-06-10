@@ -2,8 +2,11 @@ en:
   hello: "Hello world"
   time_preface: "The time is now: "
 
+  general:
+    app_name: TitlerDemo
+
   page_title:
-    base: Titler
+    base: TitlerDemo
     delimiter: ' | '
     default: Make titles easy
     admin_namespace: 'Admin - '
