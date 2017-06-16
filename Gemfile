@@ -18,7 +18,6 @@ gem 'rb-readline'
 
 group :development, :test do
   gem 'byebug'
-  gem 'spring'
   gem 'factory_girl_rails'
   gem 'faker'
   gem 'rspec-rails'
