@@ -5,8 +5,11 @@ class ApplicationController < ActionController::Base
   private
 
   def page_title
-    # require 'pry'; binding.pry;
-    Titler.new(controller: self, i18n: I18n).title
+    Titler.new(
+      controller: self,
+      i18n: I18n,
+      view_content_for: helpers.content_for(:page_title)
+    ).title
   end
   helper_method :page_title
 end

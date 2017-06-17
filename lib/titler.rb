@@ -23,10 +23,11 @@ class Titler
     attr_accessor :configuration
   end
 
-  def initialize(controller: , i18n:)
+  def initialize(controller: , i18n:, view_content_for:)
     @configuration = Configuration.new
     @controller = controller
     @i18n = i18n
+    @view_content_for = view_content_for
   end
 
   def self.title
@@ -69,16 +70,35 @@ class Titler
   end
 
   def title_body
-    'Latest Posts'
-    # title = case
-    #   when content_for?(:page_title)
-    #     content_for(:page_title)
-    #   when @page_title
-    #     @page_title
-    #   else
-    #     ''
-        # Alternative fallback: #{object_name}" if object_name.present? #See below
-    # end
+    title = case
+    # when @controller.helpers.content_for?(:page_title)
+    #   @controller.helpers.content_for(:page_title).to_s
+    when @view_content_for
+      @view_content_for
+    when @page_title
+      @page_title.to_s
+    else
+      ''
+      # Alternative fallback: #{object_name}" if object_name.present?
+      # Another possible fallback to implement from: https://stackoverflow.com/questions/3059704/rails-3-ideal-way-to-set-title-of-pages
+      # Attempt to build the best possible page title.
+      # If there is an action specific key, use that (e.g. users.index).
+      # If there is a name for the object, use that (in show and edit views).
+      # Worst case, just use the app name
+      # def page_title
+      #   app_name = t :app_name
+      #   action = t("titles.#{controller_name}.#{action_name}", default: '')
+      #   action += " #{object_name}" if object_name.present?
+      #   action += " - " if action.present?
+      #   "#{action} #{app_name}"
+      # end
+      #
+      # # attempt to get a usable name from the assigned resource
+      # # will only work on pages with singular resources (show, edit etc)
+      # def object_name
+      #   assigns[controller_name.singularize].name rescue nil
+      # end
+    end
   end
 
   def build_title(th)
@@ -94,22 +114,7 @@ class Titler
     end
   end
 
-  # Another possible fallback to implement from: https://stackoverflow.com/questions/3059704/rails-3-ideal-way-to-set-title-of-pages
-  # Attempt to build the best possible page title.
-  # If there is an action specific key, use that (e.g. users.index).
-  # If there is a name for the object, use that (in show and edit views).
-  # Worst case, just use the app name
-  # def page_title
-  #   app_name = t :app_name
-  #   action = t("titles.#{controller_name}.#{action_name}", default: '')
-  #   action += " #{object_name}" if object_name.present?
-  #   action += " - " if action.present?
-  #   "#{action} #{app_name}"
-  # end
-  #
-  # # attempt to get a usable name from the assigned resource
-  # # will only work on pages with singular resources (show, edit etc)
-  # def object_name
-  #   assigns[controller_name.singularize].name rescue nil
-  # end
+  def helpers
+    ActionController::Base.helpers
+  end
 end
