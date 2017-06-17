@@ -27,7 +27,6 @@ This is the core of the individual page title, which is set by the developer thr
 
 - content_for :page_title if found
 - @page_title if found
-- 'page_title.default' i18n translation if found
 - blank if none of the above are found
 
 ### App Name (app_name)
