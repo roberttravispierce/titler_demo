@@ -1,4 +1,4 @@
-<h2><%= t('description.preface') + Titler.title %></h2>
+<h2><%= t('description.preface') + Titler.new(controller: nil, i18n: nil).title %></h2>
 <h3><%= t('description.variable') %></h3>
 <%= render 'pages/shared/navigation' %>
 <p><%= t('time_preface') + Time.now.to_s %></p>

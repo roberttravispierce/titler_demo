@@ -26,7 +26,7 @@ class Titler
   private
 
   def delimiter
-    @i18n.exists?('page_title.delimiter') ? @i18n.t('page_title.delimiter') : '-'
+    @i18n.exists?('page_title.delimiter') ? @i18n.t('page_title.delimiter') : ' - '
   end
 
   def admin_namespace?

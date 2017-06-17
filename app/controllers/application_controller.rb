@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   private
 
   def page_title
-    require 'pry'; binding.pry;
+    # require 'pry'; binding.pry;
     Titler.new(controller: self, i18n: I18n).title
   end
   helper_method :page_title

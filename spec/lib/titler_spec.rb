@@ -19,19 +19,21 @@ describe Titler do
     #   expect(Titler.new.set).to eq(expected_title)
     # end
 
-    it 'returns a title' do
+    it '(1) returns a title' do
       title = Titler.new(controller: nil, i18n: nil).title
       expect(title).to eq 'foo'
     end
 
-    it 'returns a title prefixed by the admin namespace' do
+    it '(2) returns a title prefixed by the admin namespace' do
       mock_controller = MockController.new
-      title = Titler.new(controller: mock_controller, i18n: nil).title
+      i18n = double(:i18n)
+      expect(i18n).to receive(:exists?).with('page_title.delimiter').and_return false
+      title = Titler.new(controller: mock_controller, i18n: i18n).title
       expect(title).to eq 'Admin - foo'
     end
 
     context 'with a delimiter translation' do
-      it 'uses the delimiter from i18n' do
+      it '(3) uses the delimiter from i18n' do
         mock_controller = MockController.new
         i18n = double(:i18n)
         expect(i18n).to receive(:exists?).with('page_title.delimiter').and_return true
