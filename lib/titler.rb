@@ -1,15 +1,37 @@
-class Titler
-  require 'i18n'
+class AdminController; end
 
-  def set
-    delimiter = I18n.exists?('page_title.delimiter') ? t('page_title.delimiter') : ' - '
-    html = app_name
-    html << t('page_title.admin_namespace') + delimiter if controller.class.parents.include?(Admin)
-    html << title_from_app
-    html << (title_from_app.blank? ? app_name : app_name.prepend(delimiter))
+class Titler
+  def initialize(controller: , i18n:)
+    @controller = controller
+    @i18n = i18n
+  end
+
+  def self.title
+    new.title
+  end
+
+  def title
+    if admin_namespace?
+      ['Admin', 'foo'].join delimiter
+    else
+      'foo'
+    end
+    # delimiter = I18n.exists?('page_title.delimiter') ? t('page_title.delimiter') : ' - '
+    # html = app_name
+    # html << t('page_title.admin_namespace') + delimiter if controller.class.parents.include?(Admin)
+    # html << title_from_app
+    # html << (title_from_app.blank? ? app_name : app_name.prepend(delimiter))
   end
 
   private
+
+  def delimiter
+    @i18n.exists?('page_title.delimiter') ? @i18n.t('page_title.delimiter') : ' - '
+  end
+
+  def admin_namespace?
+    @controller.class.ancestors.include?(AdminController)
+  end
 
   def app_name
     I18n.exists?('general.app_name') ? t('general.app_name') : Rails.application.class.to_s.split("::").first
