@@ -1,7 +1,7 @@
 class AdminController; end
 
 class Titler
-  # Configuration setup for later gem use. Learned from: https://robots.thoughtbot.com/mygem-configure-block
+  # Configuration setup preparing for transition to a gem. From: https://robots.thoughtbot.com/mygem-configure-block
   def self.configure
     self.configuration ||= Configuration.new
     yield(configuration)
