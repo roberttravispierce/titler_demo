@@ -26,6 +26,7 @@ describe Titler do
         allow(i18n).to receive(:exists?).with('titler.admin_name').and_return false
         allow(i18n).to receive(:exists?).with('titler.delimiter').and_return false
         allow(i18n).to receive(:exists?).with('titler.app_name').and_return false
+        allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
         app_name = Rails.application.class.to_s.split("::").first
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('development'))
         env_prefix = '(D)'
@@ -33,6 +34,28 @@ describe Titler do
         # ActionController::Base.helpers.content_for(:page_title, 'Test Title from content_for')
         title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
         expect(title).to eq "#{env_prefix} #{mock_controller.controller_name.titleize} - #{app_name}"
+      end
+    end
+
+  # Test i18n values only setup ----------------------------------------------------
+    context 'when only i18n values provided by app' do
+      it 'returns the title from i18n values' do
+        mock_controller = MockController.new
+        i18n = double(:i18n)
+        allow(i18n).to receive(:exists?).with('titler.admin_name').and_return true
+        allow(i18n).to receive(:t).with('titler.admin_name').and_return 'Admin'
+        allow(i18n).to receive(:exists?).with('titler.delimiter').and_return true
+        allow(i18n).to receive(:t).with('titler.delimiter').and_return ' - '
+        allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
+        allow(i18n).to receive(:t).with('titler.app_name').and_return 'Titler Demo App'
+        allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return true
+        allow(i18n).to receive(:t).with('titler.app_tagline').and_return 'Test Tagline'
+        app_name = i18n.t('titler.app_name')
+        app_tagline = i18n.t('titler.app_tagline')
+        allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('staging'))
+        env_prefix = '(S)'
+        title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
+        expect(title).to eq "#{env_prefix} #{mock_controller.controller_name.titleize} - #{app_tagline} - #{app_name}"
       end
     end
 
@@ -48,6 +71,7 @@ describe Titler do
           allow(i18n).to receive(:t).with('titler.delimiter').and_return ' - '
           allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
           allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
+          allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
           title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: 'This page title set in view').title
           expect(title).to include 'Admin - '
         end
@@ -63,6 +87,7 @@ describe Titler do
           allow(i18n).to receive(:t).with('titler.delimiter').and_return ' - '
           allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
           allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
+          allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
           title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
           expect(title).to include 'Admin - '
         end
@@ -78,6 +103,7 @@ describe Titler do
           allow(i18n).to receive(:t).with('titler.delimiter').and_return ' - '
           allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
           allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
+          allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
           title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
           expect(title).to include 'MyAdmin - '
         end
@@ -93,6 +119,7 @@ describe Titler do
           allow(i18n).to receive(:t).with('titler.delimiter').and_return ' - '
           allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
           allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
+          allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
           title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
           expect(title).to include 'Admin - '
         end
@@ -109,6 +136,7 @@ describe Titler do
         allow(i18n).to receive(:t).with('titler.delimiter').and_return ' | '
         allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
         allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
+        allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
         title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
         expect(title).not_to include 'Admin - '
       end
