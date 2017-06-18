@@ -11,11 +11,13 @@ class Titler
     attr_accessor :delimiter
     attr_accessor :admin_name
     attr_accessor :app_name_position
+    attr_accessor :use_env_prefix
 
     def initialize
       @delimiter = ' - '
       @admin_name = 'Admin'
       @app_name_position = 'append' # append, prepend, none
+      @use_env_prefix = true
     end
   end
 
@@ -23,11 +25,11 @@ class Titler
     attr_accessor :configuration
   end
 
-  def initialize(controller: , i18n:, view_content_for:)
+  def initialize(controller: , i18n:, content_for_title:)
     @configuration = Configuration.new
     @controller = controller
     @i18n = i18n
-    @view_content_for = view_content_for
+    @content_for_title = content_for_title
   end
 
   def self.title
@@ -66,40 +68,38 @@ class Titler
   end
 
   def env_prefix
-    Rails.env.production? ? '' : "(#{Rails.env[0,1].upcase}) "
+    # TODO: Boolean config values didn't seem to work. Research needed.
+    # if @use_env_prefix
+    if true
+      Rails.env.production? ? '' : "(#{Rails.env[0,1].upcase}) "
+    else
+      ''
+    end
   end
 
   def title_body
     title = case
-    # when @controller.helpers.content_for?(:page_title)
-    #   @controller.helpers.content_for(:page_title).to_s
-    when @view_content_for
-      @view_content_for
-    when @page_title
-      @page_title.to_s
-    else
-      ''
-      # Alternative fallback: #{object_name}" if object_name.present?
-      # Another possible fallback to implement from: https://stackoverflow.com/questions/3059704/rails-3-ideal-way-to-set-title-of-pages
-      # Attempt to build the best possible page title.
-      # If there is an action specific key, use that (e.g. users.index).
-      # If there is a name for the object, use that (in show and edit views).
-      # Worst case, just use the app name
-      # def page_title
-      #   app_name = t :app_name
-      #   action = t("titles.#{controller_name}.#{action_name}", default: '')
-      #   action += " #{object_name}" if object_name.present?
-      #   action += " - " if action.present?
-      #   "#{action} #{app_name}"
-      # end
-      #
-      # # attempt to get a usable name from the assigned resource
-      # # will only work on pages with singular resources (show, edit etc)
-      # def object_name
-      #   assigns[controller_name.singularize].name rescue nil
-      # end
+      # TODO: Not satisfied with having to pass in content_for
+      # Tried this with ActionController::Base.helpers but couldn't
+      # get it to work
+      #   when @controller.helpers.content_for?(:page_title)
+      #     @controller.helpers.content_for(:page_title).to_s
+
+      # TODO: Actually the passing in of content_for to @content_for_title is not working either
+      # The application layout sees the content_for(:title) but the page_title
+      # helper method in application controller does not.
+      when @content_for_title.present?
+        @content_for_title
+      when @page_title
+        @page_title.to_s
+      else
+        @controller.controller_name.titleize rescue ''
     end
   end
+
+  # def helpers
+  #   ActionController::Base.helpers
+  # end
 
   def build_title(th)
     case @configuration.app_name_position
@@ -112,9 +112,5 @@ class Titler
     else
       th[:env_prefix] + th[:admin_namespace] + th[:title_body]
     end
-  end
-
-  def helpers
-    ActionController::Base.helpers
   end
 end
