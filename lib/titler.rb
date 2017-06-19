@@ -1,4 +1,5 @@
-class AdminController; end
+# Disabled to try and fix production error: /app/app/controllers/pages_controller.rb:1:in `<top (required)>': superclass mismatch for class PagesController (TypeError)
+# class AdminController; end
 
 class Titler
   # Configuration setup preparing for transition to a gem. From: https://robots.thoughtbot.com/mygem-configure-block
