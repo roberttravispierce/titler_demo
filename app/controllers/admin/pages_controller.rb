@@ -1,13 +1,15 @@
-class PagesController < AdminController
+module Admin
+  class PagesController < AdminController
 
-  def default
+    def default
+    end
+
+    def variable
+      @page_title = t('page_title.variable')
+    end
+
+    def view_content
+    end
+
   end
-
-  def variable
-    @page_title = t('page_title.variable')
-  end
-
-  def view_content
-  end
-
 end

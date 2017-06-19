@@ -19,7 +19,7 @@ class Titler
     def initialize
       @delimiter = ' - '
       @admin_name = 'Admin'
-      @admin_controller = AdminController
+      @admin_controller = 'AdminController'
       @app_name_position = 'append' # append, prepend, none
       @use_env_prefix = true
       @use_app_tagline = true
@@ -66,7 +66,7 @@ class Titler
   end
 
   def admin_namespace?
-    @controller.class.ancestors.include?(@configuration.admin_controller)
+    @controller.class.ancestors.include?(classify(@configuration.admin_controller))
   end
 
   def admin_default_name
