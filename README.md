@@ -26,8 +26,8 @@ With Titler, a page title consists of the following elements:
 This is the core of the individual page title, which is set by the developer throughout their app. In order of preference:
 
 - content_for :page_title if found [TODO: Haven't figured out how to do this yet]
-- @page_title if found
-- The Controller name is used if none of the above are found
+- @page_title instance variable if found
+- The Controller and Action (method) name is used if none of the above are found
 
 ### App Name (app_name)
 
@@ -41,6 +41,6 @@ This allows for an additional marketing tagline to be in every title. Set in the
 
 - (D) Privacy Policy | Mom App
 - About - Best App for Busy Moms - Mom App
-- (S) Admin - Posts Listing - Mom App
+- (S) Admin - User Profile - Mom App
 - Recipe of the Week / Best App for Busy Mom's / Mom App
-- Mom App | Posts
+- Mom App | Posts Index

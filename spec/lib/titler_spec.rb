@@ -1,14 +1,23 @@
 require 'rails_helper'
 
+class MockController
+  def controller_name
+    "mock"
+  end
+
+  def action_name
+    "action"
+  end
+end
+
 class AdminController; end
 class MockAdminController < AdminController
   def controller_name
     "mock"
   end
-end
-class MockController
-  def controller_name
-    "mock"
+
+  def action_name
+    "action"
   end
 end
 
@@ -30,10 +39,9 @@ describe Titler do
         app_name = Rails.application.class.to_s.split("::").first
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('development'))
         env_prefix = '(D)'
-        # TODO: This can make content_for testing pass but doesn't work in app:
-        # ActionController::Base.helpers.content_for(:page_title, 'Test Title from content_for')
-        title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
-        expect(title).to eq "#{env_prefix} #{mock_controller.controller_name.titleize} - #{app_name}"
+        expected_title = "#{env_prefix} #{mock_controller.controller_name.titleize} #{mock_controller.action_name.titleize} - #{app_name}"
+        title = Titler.new(controller: mock_controller, i18n: i18n, title_as_set: '').title
+        expect(title).to eq expected_title
       end
     end
 
@@ -54,8 +62,9 @@ describe Titler do
         app_tagline = i18n.t('titler.app_tagline')
         allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new('staging'))
         env_prefix = '(S)'
-        title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
-        expect(title).to eq "#{env_prefix} #{mock_controller.controller_name.titleize} - #{app_tagline} - #{app_name}"
+        expected_title = "#{env_prefix} #{mock_controller.controller_name.titleize} #{mock_controller.action_name.titleize} - #{app_tagline} - #{app_name}"
+        title = Titler.new(controller: mock_controller, i18n: i18n, title_as_set: '').title
+        expect(title).to eq expected_title
       end
     end
 
@@ -72,7 +81,7 @@ describe Titler do
           allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
           allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
           allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
-          title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: 'This page title set in view').title
+          title = Titler.new(controller: mock_controller, i18n: i18n, title_as_set: 'This page title set in view').title
           expect(title).to include 'Admin - '
         end
       end
@@ -88,7 +97,7 @@ describe Titler do
           allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
           allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
           allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
-          title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
+          title = Titler.new(controller: mock_controller, i18n: i18n, title_as_set: '').title
           expect(title).to include 'Admin - '
         end
       end
@@ -104,7 +113,7 @@ describe Titler do
           allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
           allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
           allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
-          title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
+          title = Titler.new(controller: mock_controller, i18n: i18n, title_as_set: '').title
           expect(title).to include 'MyAdmin - '
         end
       end
@@ -120,11 +129,11 @@ describe Titler do
           allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
           allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
           allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
-          title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
+          title = Titler.new(controller: mock_controller, i18n: i18n, title_as_set: '').title
           expect(title).to include 'Admin - '
         end
       end
-    end # /context 'when in an admin namespace'
+    end
 
     context 'when in a non-admin namespace' do
       it 'returns the title without an admin prefix' do
@@ -137,10 +146,10 @@ describe Titler do
         allow(i18n).to receive(:exists?).with('titler.app_name').and_return true
         allow(i18n).to receive(:t).with('titler.app_name').and_return 'TitlerTest'
         allow(i18n).to receive(:exists?).with('titler.app_tagline').and_return false
-        title = Titler.new(controller: mock_controller, i18n: i18n, content_for_title: '').title
+        title = Titler.new(controller: mock_controller, i18n: i18n, title_as_set: '').title
         expect(title).not_to include 'Admin - '
       end
-    end # /context 'when in a non-admin namespace'
+    end
 
   #   # context 'evaluates namespace as admin' do
   #   #   it '(1) returns a title prefixed by the admin namespace' do

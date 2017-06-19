@@ -1,5 +1,5 @@
 <%= content_for :page_title, t('page_title.view_content') %>
-<h2><%= t('description.preface') + page_title %></h2>
+<h2><%= t('description.preface') + set_page_title %></h2>
 <h3><%= t('description.view_content') %></h3>
 <p><%= "Page tite set by page_title: #{t('page_title.view_content')}" %></p>
 <%= render 'pages/shared/navigation' %>

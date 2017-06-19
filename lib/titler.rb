@@ -1,3 +1,5 @@
+class AdminController; end
+
 class Titler
   # Configuration setup preparing for transition to a gem. From: https://robots.thoughtbot.com/mygem-configure-block
   def self.configure
@@ -6,12 +8,12 @@ class Titler
   end
 
   class Configuration
-    attr_accessor :delimiter
-    attr_accessor :admin_name
-    attr_accessor :admin_controller
-    attr_accessor :app_name_position
-    attr_accessor :use_env_prefix
-    attr_accessor :use_app_tagline
+    attr_accessor :delimiter,
+                  :admin_name,
+                  :admin_controller,
+                  :app_name_position,
+                  :use_env_prefix,
+                  :use_app_tagline
 
     def initialize
       @delimiter = ' - '
@@ -27,11 +29,11 @@ class Titler
     attr_accessor :configuration
   end
 
-  def initialize(controller: , i18n:, content_for_title:)
-    @configuration = Configuration.new
+  def initialize(controller:, i18n:, title_as_set:)
     @controller = controller
     @i18n = i18n
-    @content_for_title = content_for_title
+    @title_as_set = title_as_set
+    @configuration = Configuration.new
   end
 
   def self.title
@@ -49,6 +51,14 @@ class Titler
   end
 
   private
+
+  def env_prefix
+    if @configuration.use_env_prefix
+      Rails.env.production? ? '' : "(#{Rails.env[0,1].upcase}) "
+    else
+      ''
+    end
+  end
 
   def admin_namespace
     admin_namespace? ? admin_default_name + delimiter : ''
@@ -74,31 +84,12 @@ class Titler
     tagline = @i18n.exists?('titler.app_tagline') ? @i18n.t('titler.app_tagline') : ''
   end
 
-  def env_prefix
-    if @configuration.use_env_prefix
-      Rails.env.production? ? '' : "(#{Rails.env[0,1].upcase}) "
-    else
-      ''
-    end
-  end
-
   def title_body
-    title = case
-      when @content_for_title.present?
-        @content_for_title
-      when @page_title
-        @page_title.to_s
-      else
-        @controller.controller_name.titleize rescue ''
+    if @title_as_set.present?
+      @title_as_set
+    else
+      @controller.controller_name.titleize + ' ' + @controller.action_name.titleize rescue ''
     end
-    # TODO: Not satisfied with having to pass in content_for
-    # Tried this with ActionController::Base.helpers but couldn't
-    # get it to work
-    #   when @controller.helpers.content_for?(:page_title)
-    #     @controller.helpers.content_for(:page_title).to_s
-    # TODO: Actually the passing in of content_for to @content_for_title is not working either
-    # The application layout sees the content_for(:title) but the page_title
-    # helper method in application controller does not.
   end
 
   def build_title_str(th)
