@@ -25,7 +25,7 @@ With Titler, a page title consists of the following elements:
 
 This is the core of the individual page title, which is set by the developer throughout their app. In order of preference:
 
-- content_for :page_title if found [TODO: Haven't figured out how to do this yet]
+- content_for :page_title if found
 - @page_title instance variable if found
 - The Controller and Action (method) name is used if none of the above are found
 
