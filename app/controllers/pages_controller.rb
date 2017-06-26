@@ -5,6 +5,7 @@ class PagesController < ApplicationController
 
   def variable
     @page_title = t('page_title.variable')
+    titler.page_title
   end
 
   def view_content
