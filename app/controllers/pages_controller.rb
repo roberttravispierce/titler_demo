@@ -4,8 +4,7 @@ class PagesController < ApplicationController
   end
 
   def variable
-    @page_title = t('page_title.variable')
-    titler.page_title
+    helpers.page_title t('page_title.variable')
   end
 
   def view_content

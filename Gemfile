@@ -15,6 +15,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'jbuilder', '~> 2.5'
 gem 'rb-readline'
+gem 'titler'
 
 group :development, :test do
   gem 'byebug'
