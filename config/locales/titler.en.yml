@@ -1,5 +1,6 @@
+---
 en:
   titler:
-    app_name: Titler Demo
-    delimiter: ' - '
-    admin_name: 'Admin'
+    app_name: 'Demo App'
+    app_tagline: 'A Fine Mess'
+    delimiter: ' | '
